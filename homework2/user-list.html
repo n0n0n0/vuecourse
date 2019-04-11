@@ -1,0 +1,122 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+	<template id="user-list">
+		<table class="table">
+			<thead>
+			<th>Name</th><th>Username</th><th>Email</th><th>Address</th><th>Website</th>
+			</thead>
+			<tbody>
+			<tr v-for="u in users">
+				<td>{{ u.name }}</td><td>{{ u.username }}</td><td>{{ u.email }}</td><td>{{ showAddress(u.address) }}</td>
+				<td>
+					<a :href="u.website">{{ u.website }}</a>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</template>
+	<template id="user-list2">
+		<table class="table">
+			<thead>
+			<th>Name</th><th>Lastname</th><th>Email</th><th>Company</th><th></th>
+			</thead>
+			<tbody>
+			<tr v-for="u in users">
+				<td>{{ u.name.first }}</td><td>{{ u.name.last }}</td><td>{{ u.email }}</td><td>{{ u.company }}</td>
+				<td>
+					<a :href="'user-edit.html#'+u._id">edit</a>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</template>
+    <div id="app">
+		<nav class="navbar navbar-dark bg-dark">
+			<a class="navbar-brand" href="#">{{ title }}</a>
+		</nav>
+		<div class="alert alert-secondary" role="alert">
+			Всего пользователей: {{ users2.length }}
+			<button type="button" class="btn btn-dark"
+					v-on:click="showUsers = !showUsers" style="margin-left: 20px;"
+					v-tooltip="'Нажмите, чтобы ' + (showUsers ? 'скрыть' : 'показать') + ' пользователей'"
+			>
+				{{ showUsers ? 'Скрыть' : 'Показать' }}
+			</button>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<user-list2 v-if="showUsers" v-bind:users="users2"></user-list2>
+			</div>
+		</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/v-copy@0.1.0/dist/v-copy.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+	<script src="https://unpkg.com/v-tooltip"></script>
+    <script>
+		var UserList = {
+			template: '#user-list',
+			props: {
+				users: {
+					type: Array,
+					defaultValue: []
+				}
+			},
+			methods: {
+				showAddress: function (a) {
+					return a.city + ', ' + a.street + ', ' + a.suite;
+				}
+			}
+		};
+
+		var UserList2 = {
+			template: '#user-list2',
+			props: {
+				users: {
+					type: Array,
+					defaultValue: []
+				}
+			}
+		};
+
+        window.app = new Vue({
+            el: '#app',
+			components: {
+            	'user-list': UserList,
+				'user-list2': UserList2
+			},
+            data: function () {
+                return {
+                    title: 'Домашняя работа - 2 - Список пользователей',
+					showUsers: true,
+                    users: [],
+					users2: []
+                }
+            },
+			mounted: function() {
+            	console.log('data loaded!');
+				// axios.get('http://jsonplaceholder.typicode.com/users')
+				// 		.then((response) => {
+				// 			this.users = response.data;
+				// 		})
+				// 		.catch(error => console.error(error));
+
+				axios.get('http://localhost:3000/users')
+						.then((response) => {
+							this.users2 = response.data;
+						})
+						.catch(error => console.error(error));
+			},
+			computed: {
+            	usersCount: function () {
+            		return this.users.length;
+				}
+			}
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>    
+    <div id="app">        
+    	<h1>{{ title }}</h1>
+		<div class="alert alert-secondary" role="alert">
+			Всего пользователей: {{ users.length }} (length), {{ usersCount }} (computed)
+			<button type="button" class="btn btn-dark"
+					v-on:click="showUsers = !showUsers" style="margin-left: 20px;"
+					v-tooltip="'Нажмите, чтобы ' + (showUsers ? 'скрыть' : 'показать') + ' пользователей'"
+			>
+				{{ showUsers ? 'Скрыть' : 'Показать' }}
+			</button>
+		</div>
+    	<table class="table" v-if="showUsers">
+    		<thead>
+    			<th></th><th>Имя</th><th>Фамилия</th><th>Отчество</th><th></th>
+    		</thead>
+    		<tbody>
+			<tr v-for="u in users">
+				<td><img :src="u.avatar === '' ? defaultAvatar : u.avatar" height="100"> </td><td>{{ u.name | capitalize }}</td><td>{{ u.lastname }}</td><td>{{ u.fathername }}</td>
+				<td>
+					<button class="btn btn-info" v-copy="u.name + ' ' + u.fathername + ' ' + u.lastname">Copy</button>
+				</td>
+			</tr>
+    		</tbody>
+    	</table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/v-copy@0.1.0/dist/v-copy.min.js"></script>
+	<script src="https://unpkg.com/v-tooltip"></script>
+    <script>
+        window.app = new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    title: 'Домашняя работа - 1',
+					defaultAvatar: 'https://cdn0.iconfinder.com/data/icons/elasto-online-store/26/00-ELASTOFONT-STORE-READY_user-circle-512.png',
+					showUsers: true,
+                    users: [
+                    	{name: 'Иоганн', lastname: 'Бах', fathername: 'Себастьян', avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/JSBach.jpg/260px-JSBach.jpg'},
+                    	{name: 'Георг', lastname: 'Гендель', fathername: 'Фридрих', avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/George_Frideric_Handel_by_Balthasar_Denner.jpg/267px-George_Frideric_Handel_by_Balthasar_Denner.jpg'},
+                    	{name: 'Антонио', lastname: 'Вивальди', fathername: 'Джованнич', avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Vivaldi.jpg/200px-Vivaldi.jpg'},
+						{name: 'Георг', lastname: 'Телеман', fathername: 'Филипп', avatar: ''},
+                    	{name: 'Доменико', lastname: 'Скарлатти', fathername: 'Пьетрович', avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Retrato_de_Domenico_Scarlatti.jpg/267px-Retrato_de_Domenico_Scarlatti.jpg'},
+                    ]
+                }
+            },
+			computed: {
+            	usersCount: function () {
+            		return this.users.length;
+				}
+			},
+			filters: {
+				capitalize: function (value) {
+					if (!value) return '';
+					return value.toUpperCase();
+					//return value.charAt(0).toUpperCase() + value.slice(1)
+				}
+			}
+        })
+    </script>
+</body>
+</html>
