@@ -1,0 +1,42 @@
+> npm install -g @vue/cli 
+	уже было
+> vue create homework3 
+	custom: babel, router, lint
+	config in dedicated files
+
+> npm install bootstrap
+
+main.js + 
+	import 'bootstrap/dist/css/bootstrap.css'
+
+router.js 
+	+ path '/users', '/useredit'
+	+ import UsersPage from '@/views/Users.vue'
+		внутри в <script> секции: + import UsersList from "../components/UsersList";
+	+ import UserEdit from '@/views/UserEdit.vue'
+
+(перенесли логику с запросом к json-server к users из дом работы 2 в Users.vue)
+> npm install axios
+подключение, либо в Users.vue:
+	import axios from "axios/dist/axios.js";
+либо в main.js ??
+	import axios from "axios/dist/axios.js"; - не работает, ошибка
+
+> npm install -g json-server
+> cd assets
+> json-server --watch users.json
+
+добавить динамический путь в router.js
+	+ path: '/useredit/:id'
+	после чего id будет доступно либо как {{ $router.params.id }} либо в JS как this.$router.params.id
+
+Доп задание:
+
+> npm install vue-nprogress --save
+
+
+Вопросы:
+1. При переходе на Users идет запрос за юзерами каждый раз, как это правильнее делать?
+2. Как подключать axios глобально? Как его потом использовать?
+4. Как лучше настроить отправку headers: Authorization? (глобально в main.js в деф опции axios добавить?)
+3. Рассказать про JWT
